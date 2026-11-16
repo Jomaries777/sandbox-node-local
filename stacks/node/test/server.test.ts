@@ -67,6 +67,20 @@ describe("server", () => {
     expect(await res.json()).toEqual({ status: "ok", version: "1.2.3-sha" });
   });
 
+  it("GET /version returns APP_VERSION, or dev when unset", async () => {
+    process.env.APP_VERSION = "4.5.6-sha";
+    activeServer = createServer();
+    const baseUrl = await listen(activeServer);
+
+    const set = await fetch(`${baseUrl}/version`);
+    expect(set.status).toBe(200);
+    expect(await set.json()).toEqual({ version: "4.5.6-sha" });
+
+    delete process.env.APP_VERSION;
+    const unset = await fetch(`${baseUrl}/version`);
+    expect(await unset.json()).toEqual({ version: "dev" });
+  });
+
   it("returns 404 JSON for unknown routes and methods", async () => {
     activeServer = createServer();
     const baseUrl = await listen(activeServer);

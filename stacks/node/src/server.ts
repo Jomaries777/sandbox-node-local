@@ -35,6 +35,11 @@ export function createServer(): Server {
       return;
     }
 
+    if (req.method === "GET" && pathname === "/version") {
+      sendJson(res, 200, { version: process.env.APP_VERSION ?? "dev" });
+      return;
+    }
+
     sendJson(res, 404, { error: "not found" });
   });
 }
