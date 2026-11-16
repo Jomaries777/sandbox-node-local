@@ -15,6 +15,14 @@ test("GET / returns hello @prod-safe", async ({ request }) => {
   expect(await res.json()).toEqual({ message: "hello" });
 });
 
+test("GET /version returns a version @prod-safe", async ({ request }) => {
+  const res = await request.get("/version");
+  expect(res.status()).toBe(200);
+  const body = (await res.json()) as { version: string };
+  expect(typeof body.version).toBe("string");
+  expect(body.version.length).toBeGreaterThan(0);
+});
+
 test("GET /unknown returns 404 JSON", async ({ request }) => {
   const res = await request.get("/unknown");
   expect(res.status()).toBe(404);
