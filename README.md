@@ -19,3 +19,12 @@ merge; the owner approves.
 | `make acceptance` | Acceptance suite against a local container |
 | `make smoke URL=<url>` | `prod-safe` smoke tests against a URL |
 | `make doctor` | Check repo settings, secrets and the deploy target |
+
+## Endpoints
+
+| Route | Response |
+|---|---|
+| `GET /` | `{"message":"hello"}` |
+| `GET /healthz` | `{"status":"ok","version":"<APP_VERSION or dev>"}` |
+| `GET /version` | `{"version":"<APP_VERSION or dev>"}` |
+| anything else | `404 {"error":"not found"}` |
