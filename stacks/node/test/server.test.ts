@@ -46,6 +46,17 @@ describe("server", () => {
     expect(await res.json()).toEqual({ message: "hello" });
   });
 
+  it("GET / keeps returning 200 on repeated calls", async () => {
+    activeServer = createServer();
+    const baseUrl = await listen(activeServer);
+
+    for (let i = 0; i < 3; i += 1) {
+      const res = await fetch(`${baseUrl}/`);
+      expect(res.status).toBe(200);
+      expect(await res.json()).toEqual({ message: "hello" });
+    }
+  });
+
   it("GET /healthz returns default dev version when APP_VERSION is unset", async () => {
     delete process.env.APP_VERSION;
     activeServer = createServer();
