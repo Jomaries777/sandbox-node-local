@@ -15,3 +15,21 @@ updates:
       github-actions:
         patterns:
           - "*"
+  # The node stack's npm packages. Patch updates share one PR, which the bot
+  # approves and auto-merges once ci-ok passes; minor updates share another,
+  # which waits for the owner. Major updates arrive one per PR and also wait.
+  - package-ecosystem: npm
+    directory: /stacks/node
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      npm-patch:
+        update-types:
+          - patch
+      npm-minor:
+        update-types:
+          - minor
