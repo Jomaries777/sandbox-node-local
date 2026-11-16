@@ -19,10 +19,19 @@ function sendJson(
 }
 
 export function createServer(): Server {
+  // SIMULATED FAULT (template step 6a E2E): GET / degrades after its first
+  // call, so it passes tests and the pre-traffic smoke but fails once live.
+  // The deploy must auto-revert. Removed by the follow-up fix PR.
+  let rootCalls = 0;
   return createHttpServer((req: IncomingMessage, res: ServerResponse) => {
     const pathname = new URL(req.url ?? "/", "http://localhost").pathname;
 
     if (req.method === "GET" && pathname === "/") {
+      rootCalls += 1;
+      if (rootCalls > 1) {
+        sendJson(res, 500, { error: "degraded" });
+        return;
+      }
       sendJson(res, 200, { message: "hello" });
       return;
     }
